@@ -1,0 +1,42 @@
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
+
+df = pd.read_csv("Automobile.csv")
+print("Initial dataset info:")
+print(df.info())
+
+
+if "horsepower" in df.columns:
+    df.drop(columns=["horsepower"], inplace=True)
+
+
+for col in df.select_dtypes(include=[np.number]).columns:  
+    df[col].fillna(df[col].median(), inplace=True)
+
+print("\nAfter handling missing values:")
+print(df.info())
+
+
+
+
+std_scaler = StandardScaler()
+df_std = df.copy()
+df_std[df_std.select_dtypes(include=[np.number]).columns] = std_scaler.fit_transform(
+    df_std.select_dtypes(include=[np.number])
+)
+
+
+mm_scaler = MinMaxScaler()
+df_mm = df.copy()
+df_mm[df_mm.select_dtypes(include=[np.number]).columns] = mm_scaler.fit_transform(
+    df_mm.select_dtypes(include=[np.number])
+)
+
+
+df.to_csv("Automobile_cleaned.csv", index=False)      
+df_std.to_csv("Automobile_standardized.csv", index=False)  
+df_mm.to_csv("Automobile_minmax.csv", index=False)   
+
+print("\n Files saved: 'Automobile_cleaned.csv', 'Automobile_standardized.csv', 'Automobile_minmax.csv'")
