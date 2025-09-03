@@ -2,40 +2,38 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
-# Step 1: Load the dataset
+
 df = pd.read_csv(r"C:\Users\Ramya Oli\Downloads\Automobile.csv")
 
 print("Before preprocessing:")
 print(df.info())
 
-# Step 2: Delete the column 'horsepower' (since it has missing values)
+
 if "horsepower" in df.columns:
     df.drop(columns=["horsepower"], inplace=True)
 
-# Step 3: Handle missing values (impute with median for numeric columns)
+
 for col in df.select_dtypes(include=[np.number]).columns:
     df[col].fillna(df[col].median(), inplace=True)
 
 print("\nAfter handling missing values:")
 print(df.info())
 
-# Step 4: Feature Scaling
 num_cols = df.select_dtypes(include=[np.number]).columns  # numeric columns
 
-# ---- (a) Standardization ----
+
 std_scaler = StandardScaler()
 df_std = df.copy()
 df_std[num_cols] = std_scaler.fit_transform(df_std[num_cols])
 
-# Save standardized file
 df_std.to_csv(r"C:\Users\Ramya Oli\Downloads\Automobile_standardized.csv", index=False)
-print("✅ File saved: Automobile_standardized.csv")
+print(" File saved: Automobile_standardized.csv")
 
-# ---- (b) Min-Max Scaling ----
+
 mm_scaler = MinMaxScaler()
 df_mm = df.copy()
 df_mm[num_cols] = mm_scaler.fit_transform(df_mm[num_cols])
 
-# Save min-max scaled file
+
 df_mm.to_csv(r"C:\Users\Ramya Oli\Downloads\Automobile_minmax.csv", index=False)
-print("✅ File saved: Automobile_minmax.csv")
+print(" File saved: Automobile_minmax.csv")
